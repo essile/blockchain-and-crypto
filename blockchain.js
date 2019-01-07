@@ -16,7 +16,7 @@ class Blockchain {
     }
 
     static isValidChain(chain) {
-        console.log('chain', chain);
+    // static method is a function to the class, not to an object of it
         if (JSON.stringify(chain[0]) !== JSON.stringify(Block.genesis())) {
             // without stringify never strictly equal since not the same instance -> never true
             return false
@@ -32,6 +32,22 @@ class Blockchain {
             if (hash !== validatedHash) return false;
         }
         return true;
+    }
+
+    replaceChain(chain) {
+        if(chain.length <= this.chain.length) {
+            console.error('The incoming chain needs to be longer than the original one.');
+            return;
+        }
+        if(!Blockchain.isValidChain(chain)) {
+            console.error('The incoming chain is not valid.');
+            return;
+        }
+        
+        console.log('Replacing chain with ', chain);
+        this.chain = chain;
+
+        //log errors and messages will not be printed out when testing
     }
 }
 

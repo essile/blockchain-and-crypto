@@ -37,8 +37,8 @@ class PubSub {
     }
 
     publish({ channel, message }) {
-        this.pubnub.publish({ channel, message });
-        console.log(`Message sent. Channel: ${channel}, message: ${message}`);
+        this.pubnub.publish({ message, channel });
+        console.log(`Message sent.`);
     }
 
     broadcastChain() {

@@ -10,10 +10,6 @@ class Wallet {
         this.publicKey = this.keyPair.getPublic().encode('hex');
     }
 
-    static verifySignature() {
-
-    }
-
     sign(data) {
         return this.keyPair.sign(cryptohash(data));
     }

@@ -1,5 +1,4 @@
 const Block = require('./block');
-//import { Block } from './block';
 const cryptoHash = require('./crypto-hash');
 
 class Blockchain {

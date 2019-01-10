@@ -1,4 +1,4 @@
-const Blockhain = require('../blockchain');
+const Blockhain = require('../Blockchain/blockchain');
 
 const blockchain = new Blockhain();
 let prevTimestamp, nextTimestamp, nextBlock, timeDiff, average;

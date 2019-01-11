@@ -1,5 +1,8 @@
 const Blockhain = require('../Blockchain/blockchain');
 
+// Some test data to see how many milliseconds it takes to mine a block.
+// You can also see the average time and how the difficulty rises/lowers.
+
 const blockchain = new Blockhain();
 let prevTimestamp, nextTimestamp, nextBlock, timeDiff, average;
 const times = [];
@@ -19,5 +22,6 @@ for (let i = 0; i < 10000; i++) {
 
     average = times.reduce((total, num) => (total + num)) / times.length;
 
-    console.log(`Time to mine block-${i} \t ${timeDiff} ms \t Diff: ${nextBlock.difficulty} \t Avg: ${average}ms`)
+    console.log(`Block-${i} \t ${timeDiff} ms 
+    Diff: ${nextBlock.difficulty} \t\t Avg: ${average} ms`);
 }

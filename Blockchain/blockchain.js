@@ -16,13 +16,17 @@ class Blockchain {
     }
 
     static isValidChain(chain) {
-    // static method is a function to the class, not to an object of it
         if (JSON.stringify(chain[0]) !== JSON.stringify(Block.genesis())) {
             // without stringify never strictly equal since not the same instance -> never true
-            return false
+            return false;
         };
 
         for (let i = 1; i < chain.length; i++) {
+            // checking each block so that 
+            // - the hash of the previous block matches the lastHash,
+            // - the hash is valid = old data has not been altered
+            // - there is no difficulty jumps
+
             const actualLastHash = chain[i - 1].hash;
             const lastDifficulty = chain[i - 1].difficulty;
             const { timestamp, lastHash, hash, nonce, difficulty, data} = chain[i];
@@ -32,12 +36,15 @@ class Blockchain {
             const validatedHash = cryptoHash(timestamp, lastHash, data, nonce, difficulty);
             
             if (hash !== validatedHash) return false;
-            if (Math.abs(lastDifficulty - difficulty) > 1) return false; // preventing difficulty jumps
+            if (Math.abs(lastDifficulty - difficulty) > 1) return false;
         }
         return true;
     }
 
     replaceChain(chain) {
+        // The chain is always written again to include the new block.
+        // log errors and messages will not be printed out when testing.
+
         if(chain.length <= this.chain.length) {
             console.error('The incoming chain needs to be longer than the original one.');
             return;
@@ -47,10 +54,9 @@ class Blockchain {
             return;
         }
         
-        console.log('Replacing chain with ', chain);
+        console.log('Replacing chain with \n', chain);
         this.chain = chain;
 
-        //log errors and messages will not be printed out when testing
     }
 }
 

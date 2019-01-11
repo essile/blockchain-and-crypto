@@ -1,4 +1,4 @@
-const crypto = require('crypto');
+const crypto = require('crypto'); // node module
 
 const cryptoHash = (...inputs) => {
     const hash = crypto.createHash('sha256');

@@ -13,6 +13,8 @@ class Block {
     }
 
     static genesis() {
+        // the beginning of the blockchain
+
         return new this(GENESIS_DATA);
     };
 
@@ -39,7 +41,10 @@ class Block {
         });
     }
 
-    static adjustDifficulty({ originalBlock, timestamp }) {
+    static adjustDifficulty({ originalBlock, timestamp }) { 
+        // makes mining a block harder/easier to keep the mining time stable 
+        // → to keep it secure
+
         if (originalBlock.difficulty < 1) return 1;
         if ((timestamp - originalBlock.timestamp) > MINE_RATE) return originalBlock.difficulty - 1;
         return originalBlock.difficulty + 1;

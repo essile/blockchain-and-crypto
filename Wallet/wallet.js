@@ -12,6 +12,9 @@ class Wallet {
     }
 
     sign(data) {
+        // signature is the private key to the wallet
+        // no instance created here for safety reasons
+
         return this.keyPair.sign(cryptohash(data));
     }
 
@@ -20,8 +23,8 @@ class Wallet {
         if (amount > this.balance) {
             throw new Error('Amount exceeds balance');
         }
-
         return new Transaction({ senderWallet: this, recipient, amount });
+        // new transaction instance needs to be created here!
     }
 }
 

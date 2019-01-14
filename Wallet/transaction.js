@@ -1,12 +1,14 @@
 const uuid = require('uuid/v1');
 const { verifySignature } = require('./elliptic-ec');
+const { REWARD_INPUT, MINING_REWARD } = require('../config');
 
 class Transaction {
 
-    constructor({ senderWallet, recipient, amount }) {
+    constructor({ senderWallet, recipient, amount, outputMap, input }) {
         this.id = uuid();
-        this.outputMap = this.createOutputMap({ senderWallet, recipient, amount });
-        this.input = this.createInput({ senderWallet, outputMap: this.outputMap });
+        this.outputMap = outputMap || this.createOutputMap({ senderWallet, recipient, amount });
+        this.input = input || this.createInput({ senderWallet, outputMap: this.outputMap });
+        // mining reward: outputMap and input from ctor
     }
 
     createOutputMap({ senderWallet, recipient, amount }) {
@@ -26,13 +28,13 @@ class Transaction {
             signature: senderWallet.sign(outputMap)
         };
     }
-    
+
     update({ senderWallet, recipient, amount }) {
 
-        if(amount>this.outputMap[senderWallet.publicKey]) {
+        if (amount > this.outputMap[senderWallet.publicKey]) {
             throw new Error('Amount exceeds balance');
         }
-        if(!this.outputMap[recipient]) {
+        if (!this.outputMap[recipient]) {
             this.outputMap[recipient] = amount;
         } else {
             this.outputMap[recipient] = this.outputMap[recipient] + amount;
@@ -48,7 +50,7 @@ class Transaction {
 
         const { input: { address, amount, signature }, outputMap } = transaction;
         const outputTotal = Object.values(outputMap)
-                            .reduce((total, outputAmount) => total + outputAmount);
+            .reduce((total, outputAmount) => total + outputAmount);
 
         if (amount !== outputTotal) {
             console.error(`Invalid transaction from ${address}`);
@@ -59,6 +61,13 @@ class Transaction {
             return false;
         }
         return true;
+    }
+
+    static rewardTransaction({ minerWallet }) {
+        return new this({
+            input: REWARD_INPUT,
+            outputMap: { [minerWallet.publicKey]: MINING_REWARD }
+        })
     }
 }
 

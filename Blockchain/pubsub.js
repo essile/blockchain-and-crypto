@@ -10,7 +10,8 @@ const credentials = {
 }
 
 const CHANNELS = {
-    BLOCKCHAIN: 'BLOCKCHAIN'
+    BLOCKCHAIN: 'BLOCKCHAIN',
+    TRANSACTION: 'TRANSACTION'
 }
 
 class PubSub {
@@ -19,10 +20,12 @@ class PubSub {
     // Every chain is listening (as a subscriber/sub) if there is an update to the blockchain and
     // updates the chain details in sync.
 
-    constructor({ blockchain }) {
+    constructor({ blockchain, transactionPool, wallet }) {
 
         this.blockchain = blockchain;
+        this.transactionPool = transactionPool;
         this.pubnub = new PubNub(credentials);
+        this.wallet = wallet;
 
         this.pubnub.subscribe({ channels: [Object.values(CHANNELS)] });
         this.pubnub.addListener(this.listener());
@@ -32,6 +35,13 @@ class PubSub {
         this.publish({
             channel: CHANNELS.BLOCKCHAIN,
             message: JSON.stringify(this.blockchain.chain)
+        });
+    }
+
+    broadcastTransaction(transaction) {
+        this.publish({
+            channel: CHANNELS.TRANSACTION,
+            message: JSON.stringify(transaction)
         });
     }
 
@@ -48,8 +58,21 @@ class PubSub {
                 
                 const parsedMessage = JSON.parse(message);
 
-                if (channel === CHANNELS.BLOCKCHAIN) {
-                    this.blockchain.replaceChain(parsedMessage);
+                switch(channel) {
+                    
+                    case CHANNELS.BLOCKCHAIN:
+                        this.blockchain.replaceChain(parsedMessage);
+                        break;
+
+                    case CHANNELS.TRANSACTION:
+                        if (!this.transactionPool.existingTransaction({ 
+                            inputAddress: this.wallet.publicKey })) {                            
+                                this.transactionPool.setTransaction(parsedMessage);
+                        }
+                        break;
+                        
+                    default:
+                        return;
                 }
             }
         }

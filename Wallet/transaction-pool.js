@@ -1,5 +1,3 @@
-// const transaction = require('./transaction');
-
 class TransactionPool {
 
     constructor() {
@@ -8,6 +6,10 @@ class TransactionPool {
 
     setTransaction(transaction) {
         this.transactionMap[transaction.id] = transaction;
+    }
+
+    setMap(transactionMap) {
+        this.transactionMap = transactionMap;
     }
 
     existingTransaction({ inputAddress }) {

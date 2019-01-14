@@ -24,7 +24,7 @@ describe('TransactionPool', () => {
     });
 
     describe('existingTransaction()', () => {
-        it('returns an existing transaction gien an input address', () => {
+        it('returns an existing transaction given an input address', () => {
            transactionPool.setTransaction(transaction);
            expect(
                transactionPool.existingTransaction({ inputAddress: senderWallet.publicKey })

@@ -29,31 +29,32 @@ class Blockchain {
 
             const actualLastHash = chain[i - 1].hash;
             const lastDifficulty = chain[i - 1].difficulty;
-            const { timestamp, lastHash, hash, nonce, difficulty, data} = chain[i];
-            
+            const { timestamp, lastHash, hash, nonce, difficulty, data } = chain[i];
+
             if (lastHash !== actualLastHash) return false;
-            
+
             const validatedHash = cryptoHash(timestamp, lastHash, data, nonce, difficulty);
-            
+
             if (hash !== validatedHash) return false;
             if (Math.abs(lastDifficulty - difficulty) > 1) return false;
         }
         return true;
     }
 
-    replaceChain(chain) {
+    replaceChain(chain, onSuccess) {
         // The chain is always written again to include the new block.
         // log errors and messages will not be printed out when testing.
 
-        if(chain.length <= this.chain.length) {
+        if (chain.length <= this.chain.length) {
             console.error('The incoming chain needs to be longer than the original one.');
             return;
         }
-        if(!Blockchain.isValidChain(chain)) {
+        if (!Blockchain.isValidChain(chain)) {
             console.error('The incoming chain is not valid.');
             return;
         }
-        
+
+        if (onSuccess) onSuccess();
         console.log('Replacing chain with \n', chain);
         this.chain = chain;
 

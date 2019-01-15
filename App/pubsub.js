@@ -83,7 +83,4 @@ class PubSub {
     }
 }
 
-// const testPubSub = new PubSub();
-// testPubSub.publish({ channel: CHANNELS.TEST, message: 'hello' });
-
 module.exports = PubSub;

@@ -19,13 +19,31 @@ const transactionMiner = new TransactionMiner({
 const DEFAULT_PORT = 3000;
 const ROOT_NODE_ADDRESS = `http://localhost:${DEFAULT_PORT}`;
 
-// setTimeout(() => pubsub.broadcastChain(), 1000);
 
 app.use(bodyParser.json());
+
 
 app.get('/api/blocks', (request, response) => {
     response.json(blockchain.chain);
 });
+
+app.get('/api/transaction-pool-map', (req, res) => {
+    res.json(transactionPool.transactionMap);
+});
+
+app.get('/api/mine-transactions', (req, res) => {
+    transactionMiner.mineTransactions();
+    res.redirect('/api/blocks');
+});
+
+app.get('/api/wallet-info', (req, res) => {
+    const address = wallet.publicKey;
+    res.json({
+        address,
+        balance: Wallet.calculateBalance({ chain: blockchain.chain, address })
+    });
+});
+
 
 app.post('/api/mine', (req, res) => {
     const { data } = req.body;
@@ -58,22 +76,6 @@ app.post('/api/transact', (req, res) => {
     res.json({ type: 'success', transaction });
 });
 
-app.get('/api/transaction-pool-map', (req, res) => {
-    res.json(transactionPool.transactionMap);
-});
-
-app.get('/api/mine-transactions', (req, res) => {
-    transactionMiner.mineTransactions();
-    res.redirect('/api/blocks');
-});
-
-app.get('/api/wallet-info', (req, res) => {
-    const address = wallet.publicKey;
-    res.json({
-        address,
-        balance: Wallet.calculateBalance({ chain: blockchain.chain, address })
-    });
-});
 
 const syncWithRootState = () => {
     request({ url: `${ROOT_NODE_ADDRESS}/api/blocks` }, (error, response, body) => {
@@ -96,8 +98,11 @@ const syncWithRootState = () => {
 }
 
 let PEER_PORT;
+// with the peer ports possible to have multiple instances of the blockchain application
+
 if (process.env.GENERATE_PEER_PORT === 'true') {
-    PEER_PORT = DEFAULT_PORT + Math.ceil(Math.random() * 1000); // random number 1-1000;
+    PEER_PORT = DEFAULT_PORT + Math.ceil(Math.random() * 1000); 
+        // creating a random peer port with a port number between 3001 and 3999
 }
 
 const PORT = PEER_PORT || DEFAULT_PORT;

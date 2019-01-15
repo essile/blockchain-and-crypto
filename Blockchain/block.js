@@ -14,11 +14,12 @@ class Block {
 
     static genesis() {
         // the beginning of the blockchain
-
         return new this(GENESIS_DATA);
     };
 
     static mineBlock({ lastBlock, data }) {
+        // proof of work: it takes time + computational power (=money) to find a valid hash
+
         let hash, timestamp;
         const lastHash = lastBlock.hash;
         let { difficulty } = lastBlock;
@@ -28,6 +29,7 @@ class Block {
             nonce++;
             timestamp = Date.now();
             difficulty = Block.adjustDifficulty({ originalBlock: lastBlock, timestamp });
+                // difficulty gets adjusted so that it is not too fast/slow to mine a new block
             hash = cryptoHash(timestamp, lastHash, data, nonce, difficulty);
         } while (hexToBinary(hash).substring(0, difficulty) !== '0'.repeat(difficulty));
 

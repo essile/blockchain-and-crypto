@@ -8,7 +8,9 @@ class Transaction {
         this.id = uuid();
         this.outputMap = outputMap || this.createOutputMap({ senderWallet, recipient, amount });
         this.input = input || this.createInput({ senderWallet, outputMap: this.outputMap });
-        // mining reward: outputMap and input from ctor
+        
+        // Transaction is a mining reward when 'outputMap' and 'input' come in as parameters
+        // otherwise a normal transaction
     }
 
     createOutputMap({ senderWallet, recipient, amount }) {

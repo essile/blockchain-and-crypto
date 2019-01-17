@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
 import Block from './Block';
+import Musucoin from '../assets/Musucoin.png';
 
 class App extends Component {
     state = { walletInfo: {} }
@@ -18,10 +19,14 @@ class App extends Component {
 
         this.componentDidMount
         return (
-            <div>
-                <div>App component</div>
-                <div>Address: {address}</div>
-                <div>Balance: {balance}</div>
+            <div className='container'>
+                <div>
+                    <img className='logo' src={Musucoin} />
+                </div>
+                <div className='container'>
+                    Address: {address} <br />
+                    Balance: {balance}
+                </div>
                 <Block />
             </div>
         );

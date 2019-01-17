@@ -103,12 +103,44 @@ const syncWithRootState = () => {
     });
 }
 
+// generating dummy transaction data for testing
+const walletDevHerp = new Wallet();
+const walletDevDerp = new Wallet();
+
+const generateWalletTransaction = ({ recipient, amount }) => {
+    const transaction = wallet.createTransaction({ recipient, amount, chain: blockchain.chain });
+    transactionPool.setTransaction(transaction);
+};
+const WalletAction = () => generateWalletTransaction({
+    wallet, recipient: walletDevHerp.publicKey, amount: 5
+});
+const WalletHerpAction = () => generateWalletTransaction({
+    wallet: walletDevHerp, recipient: walletDevDerp.publicKey, amount: 10
+});
+const WalletDerpAction = () => generateWalletTransaction({
+    wallet: walletDevDerp, recipient: wallet.publicKey, amount: 15
+});
+for (let i = 0; i < 10; i++) {
+    if (i % 3 === 0) {
+        WalletAction();
+        WalletHerpAction();
+    } else if (i % 3 === 1) {
+        WalletAction();
+        WalletDerpAction();
+    } else {
+        WalletHerpAction();
+        WalletDerpAction();
+    }
+    transactionMiner.mineTransactions();
+}
+
+
 let PEER_PORT;
 // with the peer ports possible to have multiple instances of the blockchain application
 
 if (process.env.GENERATE_PEER_PORT === 'true') {
-    PEER_PORT = DEFAULT_PORT + Math.ceil(Math.random() * 1000); 
-        // creating a random peer port with a port number between 3001 and 3999
+    PEER_PORT = DEFAULT_PORT + Math.ceil(Math.random() * 1000);
+    // creating a random peer port with a port number between 3001 and 3999
 }
 
 const PORT = PEER_PORT || DEFAULT_PORT;

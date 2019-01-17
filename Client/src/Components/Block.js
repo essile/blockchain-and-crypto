@@ -17,14 +17,16 @@ class Block extends Component {
 
     render() {
         return (
-            <div>
+            <div className='container'>
                 <h3>Blocks</h3>
                 {
                     this.state.blocks.map(block => {
                         return (
-                            <div>
-                                <div key={block.hash}>Hash: {block.hash}</div>
-                                <div key={block.timestamp}>Timestamp: {block.timestamp}</div>
+                            <div className='block'>
+                                <div key={block.hash}>
+                                    Hash: {block.hash} <br />
+                                    Timestamp: {block.timestamp}<br />
+                                </div>
                             </div>
                         )
                     })

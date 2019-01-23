@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Col } from 'react-bootstrap';
 import Axios from 'axios';
 
 class WalletDetails extends Component {
@@ -23,7 +24,7 @@ class WalletDetails extends Component {
         const { address, balance } = this.state.walletInfo;
 
         return (
-            <div className='container'>
+            <Col sm={10} md={8} lg={6} className='centered container-fluid'>
                 <h3>Your wallet details</h3>
                 <div>
                     <span>Address:</span><br />
@@ -34,7 +35,7 @@ class WalletDetails extends Component {
                     <span>Balance: </span>
                     <span>{this.state.isLoading ? '...' : balance}</span>
                 </div>
-            </div>
+            </Col>
         );
     }
 }

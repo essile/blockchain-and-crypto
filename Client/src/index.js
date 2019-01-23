@@ -9,6 +9,7 @@ import './index.css';
 import Blocks from './Components/Blocks';
 import WalletDetails from './components/WalletDetails';
 import ConductTransaction from './components/ConductTransaction';
+import TransactionPool from './components/TransactionPool';
 
 render(
     <Router history={history}>
@@ -24,6 +25,7 @@ render(
                     <Nav pullRight>
                         <NavItem href="/wallet-details">Wallet details</NavItem>
                         <NavItem href="/new-transaction">Make a transaction</NavItem>
+                        <NavItem href="/transaction-pool">Transaction pool</NavItem>
                         <NavItem href="/blocks">Blockchain</NavItem>
                     </Nav>
                 </Navbar.Collapse>
@@ -32,6 +34,7 @@ render(
                 <Route path='/blocks' component={Blocks} />
                 <Route path='/wallet-details' component={WalletDetails} />
                 <Route path='/new-transaction' component={ConductTransaction} />
+                <Route path='/transaction-pool' component={TransactionPool} />
                 <Route exact path='/' component={App} />
             </Switch>
         </div>

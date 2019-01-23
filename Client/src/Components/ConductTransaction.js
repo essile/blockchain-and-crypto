@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
 import { FormGroup, FormControl, ControlLabel, Button, Alert, Row, Col } from 'react-bootstrap';
 import Axios from 'axios';
+import history from '../history';
 
 class ConductTransaction extends Component {
     state = {
         fieldErrorMessageVisible: false,
         connectionErrorMessageVisible: false,
-        success: false
+        success: false,
+        errorMessage: ""
     };
 
     handleChange = event => {
         this.setState({ [event.target.id]: event.target.value });
-        console.log(this.state);
     }
 
     validateRecipient() {
@@ -33,7 +34,7 @@ class ConductTransaction extends Component {
     }
 
     conductTransaction = () => {
-        this.setState({ fieldErrorMessageVisible: false });
+        this.setState({ fieldErrorMessageVisible: false, connectionErrorMessageVisible: false, success: false });
 
         if (this.state.recipient == undefined || this.state.amount == undefined) {
             this.setState({ fieldErrorMessageVisible: true });
@@ -44,38 +45,44 @@ class ConductTransaction extends Component {
 
             Axios.post('api/transact', { recipient, amount })
                 .then((response) => {
-                    this.setState({ success: true });
-                    console.log(response)
+                    // this.setState({ success: true });
+                    history.push('/transaction-pool');
                 })
                 .catch((error) => {
-                    this.setState({ connectionErrorMessageVisible: true });
-                    console.log(error)
+                    if (error.response != undefined) {
+                        if (error.response.status == 400) {
+                            this.setState({ errorMessage: error.response.data.message, connectionErrorMessageVisible: true });
+                            return;
+                        }
+                    }
+                    console.log(error);
+                    this.setState({ errorMessage: "Something went wrong. Try again later.", connectionErrorMessageVisible: true });
                 });
         }
     }
 
     render() {
         return (
-            <Col sm={10} md={8} lg={6} className='new-transaction container-fluid'>
-                    <h3>Conduct a transaction</h3>
-                    <FormGroup
-                        controlId='recipient'
-                        validationState={this.validateRecipient()}
-                    >
-                        <ControlLabel>Recipient address</ControlLabel>
-                        <FormControl required type='text' onChange={this.handleChange}></FormControl>
-                    </FormGroup>
-                    <FormGroup
-                        controlId='amount'
-                        validationState={this.validateAmount()}
-                    >
-                        <ControlLabel>Amount</ControlLabel>
-                        <FormControl required type='number' onChange={this.handleChange}></FormControl>
-                    </FormGroup>
-                    {this.state.fieldErrorMessageVisible && <Alert>Please check the fields.</Alert>}
-                    {this.state.connectionErrorMessageVisible && <Alert>Something went wrong. Try again later.</Alert>}
-                    {this.state.success && <Alert>Success</Alert>}
-                    <Button type='submit' onClick={this.conductTransaction}>Send</Button>
+            <Col sm={10} md={8} lg={6} className='centered container-fluid'>
+                <h3>Conduct a transaction</h3>
+                <FormGroup
+                    controlId='recipient'
+                    validationState={this.validateRecipient()}
+                >
+                    <ControlLabel>Recipient address</ControlLabel>
+                    <FormControl required type='text' onChange={this.handleChange}></FormControl>
+                </FormGroup>
+                <FormGroup
+                    controlId='amount'
+                    validationState={this.validateAmount()}
+                >
+                    <ControlLabel>Amount</ControlLabel>
+                    <FormControl required type='number' onChange={this.handleChange}></FormControl>
+                </FormGroup><br />
+                <Button block type='submit' onClick={this.conductTransaction}>Send</Button><br />
+                {this.state.fieldErrorMessageVisible && <Alert>Please check the fields</Alert>}
+                {this.state.connectionErrorMessageVisible && <Alert>{this.state.errorMessage}</Alert>}
+                {this.state.success && <Alert>Transaction succeeded</Alert>}
             </Col>
         );
     }

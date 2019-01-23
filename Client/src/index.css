@@ -37,13 +37,17 @@ body {
     margin-top: 2%;
 }
 
-.new-transaction {
+.centered {
     float: inherit;
 }
 
 #toggle-button {
     margin-top: 2%;
     margin-bottom: 2%;
+}
+
+.padding {
+    padding: 2%;
 }
 
 @media (min-width: 992px) {

@@ -10,7 +10,7 @@ class Blocks extends Component {
     }
 
     componentDidMount() {
-        Axios.get('/api/blocks')
+        Axios.get(`${document.location.origin}/api/blocks`)
             .then(response => {
                 this.setState({ blocks: response.data });
             });

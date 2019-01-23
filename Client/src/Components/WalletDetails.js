@@ -10,7 +10,7 @@ class WalletDetails extends Component {
 
     componentDidMount() {
         this.setState({ isLoading: true });
-        Axios.get('/api/wallet-info')
+        Axios.get(`${document.location.origin}/api/wallet-info`)
             .then(response => {
                 this.setState({ walletInfo: response.data, isLoading: false });
                 console.log(response);

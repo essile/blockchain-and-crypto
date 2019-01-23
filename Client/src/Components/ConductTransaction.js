@@ -43,7 +43,7 @@ class ConductTransaction extends Component {
         } else {
             const { recipient, amount } = this.state;
 
-            Axios.post('api/transact', { recipient, amount })
+            Axios.post(`${document.location.origin}/api/transact`, { recipient, amount })
                 .then((response) => {
                     // this.setState({ success: true });
                     history.push('/transaction-pool');

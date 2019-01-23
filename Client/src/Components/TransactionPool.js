@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Axios from 'axios';
 import { Col } from 'react-bootstrap';
 
+const FETCH_INTERVAL_MS = 10000;
+
 class TransactionPool extends Component {
 
     state = {
@@ -10,10 +12,14 @@ class TransactionPool extends Component {
 
     componentDidMount() {
         this.fetchTransactionPoolMap();
+
+        this.fetchInterval = setInterval(
+            () => this.fetchTransactionPoolMap(), FETCH_INTERVAL_MS
+        );
     }
 
     fetchTransactionPoolMap = () => {
-        Axios.get('/api/transaction-pool-map')
+        Axios.get(`${document.location.origin}/api/transaction-pool-map`)
             .then(response => {
                 // console.log(response)
                 this.setState({ transactionPool: response.data })
@@ -21,6 +27,10 @@ class TransactionPool extends Component {
             .catch(error => {
                 console.log(error)
             })
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.fetchInterval);
     }
 
     get renderTransactions() {

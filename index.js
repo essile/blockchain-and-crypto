@@ -104,35 +104,35 @@ const syncWithRootState = () => {
 }
 
 // generating dummy transaction data for testing
-const walletDevHerp = new Wallet();
-const walletDevDerp = new Wallet();
+// const walletDevHerp = new Wallet();
+// const walletDevDerp = new Wallet();
 
-const generateWalletTransaction = ({ recipient, amount }) => {
-    const transaction = wallet.createTransaction({ recipient, amount, chain: blockchain.chain });
-    transactionPool.setTransaction(transaction);
-};
-const WalletAction = () => generateWalletTransaction({
-    wallet, recipient: walletDevHerp.publicKey, amount: 5
-});
-const WalletHerpAction = () => generateWalletTransaction({
-    wallet: walletDevHerp, recipient: walletDevDerp.publicKey, amount: 10
-});
-const WalletDerpAction = () => generateWalletTransaction({
-    wallet: walletDevDerp, recipient: wallet.publicKey, amount: 15
-});
-for (let i = 0; i < 10; i++) {
-    if (i % 3 === 0) {
-        WalletAction();
-        WalletHerpAction();
-    } else if (i % 3 === 1) {
-        WalletAction();
-        WalletDerpAction();
-    } else {
-        WalletHerpAction();
-        WalletDerpAction();
-    }
-    transactionMiner.mineTransactions();
-}
+// const generateWalletTransaction = ({ recipient, amount }) => {
+//     const transaction = wallet.createTransaction({ recipient, amount, chain: blockchain.chain });
+//     transactionPool.setTransaction(transaction);
+// };
+// const WalletAction = () => generateWalletTransaction({
+//     wallet, recipient: walletDevHerp.publicKey, amount: 5
+// });
+// const WalletHerpAction = () => generateWalletTransaction({
+//     wallet: walletDevHerp, recipient: walletDevDerp.publicKey, amount: 10
+// });
+// const WalletDerpAction = () => generateWalletTransaction({
+//     wallet: walletDevDerp, recipient: wallet.publicKey, amount: 15
+// });
+// for (let i = 0; i < 10; i++) {
+//     if (i % 3 === 0) {
+//         WalletAction();
+//         WalletHerpAction();
+//     } else if (i % 3 === 1) {
+//         WalletAction();
+//         WalletDerpAction();
+//     } else {
+//         WalletHerpAction();
+//         WalletDerpAction();
+//     }
+//     transactionMiner.mineTransactions();
+// }
 
 
 let PEER_PORT;

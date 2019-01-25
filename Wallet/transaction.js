@@ -8,7 +8,7 @@ class Transaction {
         this.id = uuid();
         this.outputMap = outputMap || this.createOutputMap({ senderWallet, recipient, amount });
         this.input = input || this.createInput({ senderWallet, outputMap: this.outputMap });
-        
+
         // Transaction is a mining reward when 'outputMap' and 'input' come in as parameters
         // otherwise a normal transaction
     }
@@ -51,11 +51,17 @@ class Transaction {
         // that the signature (=the private key to the wallet) is valid
 
         const { input: { address, amount, signature }, outputMap } = transaction;
-        const outputTotal = Object.values(outputMap)
-            .reduce((total, outputAmount) => total + outputAmount);
+
+        let outputTotal = 0;
+
+        Object.values(outputMap).map(transactionAmount => {
+            console.log(transactionAmount + ' tuli sisään ja on nyt ' + typeof (transactionAmount));
+            outputTotal = +transactionAmount + outputTotal;
+        });
+        console.log('yht ' + outputTotal);
 
         if (amount !== outputTotal) {
-            console.error(`Invalid transaction from ${address}`);
+            console.error(`Invalid transaction from ${address}. Amount: ${amount}, Total: ${outputTotal}`);
             return false;
         }
         if (!verifySignature({ publicKey: address, data: outputMap, signature: signature })) {

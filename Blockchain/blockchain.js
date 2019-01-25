@@ -78,7 +78,7 @@ class Blockchain {
                     });
 
                     if (transaction.input.amount !== trueBalance) {
-                        console.error('Invalid input amount.');
+                        console.error('Invalid input amount. input: ' + transaction.input.amount + ', trueBalance: ' + trueBalance);
                         return false;
                     }
 

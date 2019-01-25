@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
-import { Col } from 'react-bootstrap';
+import { Col, Button } from 'react-bootstrap';
 
 const FETCH_INTERVAL_MS = 10000;
 
@@ -26,6 +26,17 @@ class TransactionPool extends Component {
             })
             .catch(error => {
                 console.log(error)
+            })
+    }
+
+    mineTransactions = () => {
+        Axios.get(`${document.location.origin}/api/mine-transactions`)
+            .then(response => {
+                console.log(response)
+                alert('succeedeed');
+            })
+            .catch(error => {
+                console.log(error);
             })
     }
 
@@ -65,6 +76,7 @@ class TransactionPool extends Component {
             <Col sm={10} md={8} lg={6} className='centered container-fluid'>
                 <h4>Transactions waiting to be mined to a block</h4>
                 {Object.keys(this.state.transactionPool).length == 0 ? <div>No new transactions</div> : this.renderTransactions}
+                <Button onClick={this.mineTransactions}>Mine</Button>
             </Col>
         );
     }
